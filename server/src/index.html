@@ -1,0 +1,39 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.IO Example</title>
+  </head>
+  <body>
+    <!-- <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form> -->
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      //   // Listen for 'chat message' event
+      //   socket.on("chat message", (msg) => {
+      //     const messages = document.getElementById("messages");
+      //     const li = document.createElement("li");
+      //     li.textContent = msg;
+      //     messages.appendChild(li);
+      //   });
+
+      //   // Submit form to emit 'chat message' event
+      //   document.getElementById("form").addEventListener("submit", function (e) {
+      //     e.preventDefault();
+      //     const input = document.getElementById("m");
+      //     if (input.value.trim() !== "") {
+      //       socket.emit("chat message", input.value);
+      //       input.value = "";
+      //     }
+      //   });
+    </script>
+  </body>
+</html>
