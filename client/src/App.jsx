@@ -1,8 +1,17 @@
+import { Route, Routes, Navigate } from 'react-router-dom'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
 
 export default function App() {
+  const user = localStorage.getItem('token');
   return (
-    <h1 className="text-3xl text-center font-bold underline">
-      Hello Shoaib!
-    </h1>
-  )
+    <Routes>
+      {user && <Route path="/" element={<Home />} />}
+      <Route path="/Login" element={<Login />} />
+      <Route path="/Signup" element={<Signup />} />
+      <Route path="/" element={<Navigate to="/LogIn" />} />
+    </Routes>
+
+  );
 }
