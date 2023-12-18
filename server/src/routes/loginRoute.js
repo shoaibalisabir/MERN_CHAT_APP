@@ -3,8 +3,17 @@ import * as dotenv from "dotenv";
 import { User } from "../models/user";
 import Joi from "joi";
 import bcrypt from "bcrypt";
+console.log("1");
 
 const router = express.Router();
+
+const validate = (data) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required().label("Email"),
+    password: Joi.string().required().label("Password"),
+  });
+  return schema.validate(data);
+};
 
 router.post("/", async (req, res) => {
   try {
@@ -34,13 +43,5 @@ router.post("/", async (req, res) => {
     return res.status(500).send({ message: "Internal server error" });
   }
 });
-
-const validate = (data) => {
-  const schema = Joi.object({
-    email: Joi.string().email().required().label("Email"),
-    password: Joi.string().required().label("Password"),
-  });
-  return schema.validate(data);
-};
 
 export default router;

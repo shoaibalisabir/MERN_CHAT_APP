@@ -4,7 +4,7 @@ import { User, validate } from "../models/user";
 import bcrypt from "bcrypt";
 
 dotenv.config();
-
+console.log("2");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
