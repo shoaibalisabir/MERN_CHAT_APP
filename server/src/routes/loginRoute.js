@@ -1,9 +1,8 @@
 import express from "express";
 import * as dotenv from "dotenv";
-import { User } from "../models/user";
+import { User } from "../model/usersSchema.js";
 import Joi from "joi";
 import bcrypt from "bcrypt";
-console.log("1");
 
 const router = express.Router();
 

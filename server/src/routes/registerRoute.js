@@ -1,10 +1,9 @@
 import express from "express";
 import * as dotenv from "dotenv";
-import { User, validate } from "../models/user";
+import { User, validate } from "../model/usersSchema.js";
 import bcrypt from "bcrypt";
 
 dotenv.config();
-console.log("2");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
