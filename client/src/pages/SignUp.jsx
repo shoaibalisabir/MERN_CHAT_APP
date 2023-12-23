@@ -1,12 +1,13 @@
-import React from 'react'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-const SignUp = () => {
+const Signup = () => {
 
     const [data, setData] = useState({
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
     });
@@ -28,10 +29,13 @@ const SignUp = () => {
             const url = 'http://localhost:8000/api/register';
             const response = await axios.post(url, data);
             console.log(response.data);
-            navigate('/LogIn');
+            navigate('/Login');
         } catch (error) {
             if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-                setError(error.response.data);
+                setError(error.response.data.message);
+            }
+            else {
+                setError("An error occurred. Please try again later.");
             }
         }
     }
@@ -54,7 +58,7 @@ const SignUp = () => {
                     <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
                         <div>
                             <label
-                                htmlFor="first_name"
+                                htmlFor="firstName"
                                 className="block text-sm font-medium leading-6 text-gray-900"
                             >
                                 First Name
@@ -62,11 +66,11 @@ const SignUp = () => {
                             <div className="mt-2">
                                 <input
                                     placeholder=' Shoaib Ali'
-                                    id="first_name"
-                                    name="first_name"
+                                    id="firstName"
+                                    name="firstName"
                                     type="text"
                                     required
-                                    value={data.first_name}
+                                    value={data.firstName}
                                     onChange={handleChange}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
@@ -75,7 +79,7 @@ const SignUp = () => {
 
                         <div>
                             <label
-                                htmlFor="last_name"
+                                htmlFor="lastName"
                                 className="block text-sm font-medium leading-6 text-gray-900"
                             >
                                 Last Name
@@ -83,11 +87,11 @@ const SignUp = () => {
                             <div className="mt-2">
                                 <input
                                     placeholder=' Sabir'
-                                    id="last_name"
-                                    name="last_name"
+                                    id="lastName"
+                                    name="lastName"
                                     type="text"
                                     required
-                                    value={data.last_name}
+                                    value={data.lastName}
                                     onChange={handleChange}
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
@@ -165,4 +169,4 @@ const SignUp = () => {
     )
 }
 
-export default SignUp
+export default Signup

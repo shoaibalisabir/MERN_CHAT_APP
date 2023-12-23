@@ -1,10 +1,10 @@
-import React from 'react'
 
 const Home = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('token');
-        window.location.reload();
+        window.location = '/';
+
     };
 
     return (

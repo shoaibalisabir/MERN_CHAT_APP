@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -7,8 +6,6 @@ const Login = () => {
 
 
     const [data, setData] = useState({
-        first_name: "",
-        last_name: "",
         email: "",
         password: "",
     });
@@ -25,16 +22,20 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(data);
         try {
             const url = 'http://localhost:8000/api/login';
             const response = await axios.post(url, data);
             localStorage.setItem('token', response.data);
-            window.location = '/';
+            window.location = '/dashboard';
             console.log(response.data);
         } catch (error) {
             console.log(error);
             if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-                setError(error.response.data);
+                setError(error.response.data.message);
+            }
+            else {
+                setError("An error occurred. Please try again later.");
             }
         }
     }
