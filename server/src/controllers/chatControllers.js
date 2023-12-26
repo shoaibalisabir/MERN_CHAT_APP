@@ -2,6 +2,8 @@ import expressAsyncHandler from "express-async-handler";
 import Chat from "../model/chatSchema.js";
 import { User } from "../model/usersSchema.js";
 
+//single one to one chat is created
+
 const accessSingleChat = expressAsyncHandler(async (req, res) => {
   const { userId } = req.body;
 
@@ -21,8 +23,10 @@ const accessSingleChat = expressAsyncHandler(async (req, res) => {
 
   isChat = await User.populate(isChat, { path: "latestMessage.sender" });
 
+  //checking if chat already exisits
   if (isChat.length > 0) {
-    response.status(200).send(isChat[0]);
+    console.log("Chat already exists", isChat[0]);
+    res.status(200).json(isChat[0]);
   } else {
     var newChat = {
       chatName: "simple chat",
