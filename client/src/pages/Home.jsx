@@ -1,3 +1,5 @@
+import React from "react";
+import { Button } from "@chakra-ui/react";
 
 const Home = () => {
 
@@ -9,8 +11,8 @@ const Home = () => {
 
     return (
         <>
-            <h1>Hello World</h1>
-            <button onClick={handleLogout}>Logout</button>
+            <Button colorScheme='blue'>Button</Button>
+            <Button colorScheme='red' onClick={handleLogout}>Logout</Button>
         </>
 
     )

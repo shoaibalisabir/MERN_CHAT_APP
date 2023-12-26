@@ -7,6 +7,8 @@ import connectDB from "./src/mongodb/connect.js";
 import dotenv from "dotenv";
 import loginRoute from "./src/routes/loginRoute.js";
 import registerRoute from "./src/routes/registerRoute.js";
+import searchUsers from "./src/routes/searchUsers.js";
+import chatRoutes from "./src/routes/chatRoutes.js";
 
 dotenv.config();
 
@@ -22,6 +24,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/login", loginRoute);
 app.use("/api/register", registerRoute);
+app.use("/api/userSearch", searchUsers);
+app.use("/api/chats", chatRoutes);
 
 io.on("connection", (socket) => {
   console.log(`A user connected ${socket.id}`);
