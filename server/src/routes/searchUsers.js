@@ -24,7 +24,9 @@ router.get(
       : {};
     console.log("keyword Regex Object Formed:", keyword.$or);
 
-    const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+    const users = await User.find(keyword)
+      .find({ _id: { $ne: req.user._id } })
+      .select("-password");
 
     res.status(200).send(users);
   })
