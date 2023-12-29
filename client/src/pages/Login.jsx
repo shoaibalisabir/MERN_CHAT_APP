@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from "react";
 import logo from '../assets/images/logo.png';
+import { useContext } from "react";
+import UserContext from "../context/UserContext";
 
 
 
@@ -11,9 +13,12 @@ const Login = () => {
     //check if token and user data  is already stored
     const navigate = useNavigate();
 
+    // let { user } = useContext(UserContext);
+    // console.log("User Data Login:", user);
+
     useEffect(() => {
         const user = localStorage.getItem("userdata");
-        console.log(user);
+        // console.log(user);
         if (user) navigate("/dashboard");
     }, [navigate]);
 
