@@ -1,8 +1,21 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useEffect } from "react";
+import logo from '../assets/images/logo.png';
+
+
 
 const Login = () => {
+
+    //check if token and user data  is already stored
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = localStorage.getItem("userdata");
+        console.log(user);
+        if (user) navigate("/dashboard");
+    }, [navigate]);
 
 
     const [data, setData] = useState({
@@ -26,7 +39,7 @@ const Login = () => {
         try {
             const url = 'http://localhost:8000/api/login';
             const response = await axios.post(url, data);
-            localStorage.setItem('token', response.data);
+            localStorage.setItem('userdata', JSON.stringify(response));
             window.location = '/dashboard';
             console.log(response.data);
         } catch (error) {
@@ -46,8 +59,8 @@ const Login = () => {
             <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <img
-                        className="mx-auto h-10 w-auto"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                        className="mx-auto h-20 w-auto"
+                        src={logo}
                         alt="Your Company"
                     />
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -60,7 +73,7 @@ const Login = () => {
                         <div>
                             <label
                                 htmlFor="email"
-                                className="block text-sm font-medium leading-6 text-gray-900"
+                                className="block text-sm font-medium leading-6 text-gray-900 "
                             >
                                 Email address
                             </label>
@@ -74,7 +87,7 @@ const Login = () => {
                                     required
                                     value={data.email}
                                     onChange={handleChange}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -99,7 +112,7 @@ const Login = () => {
                                     required
                                     value={data.password}
                                     onChange={handleChange}
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -116,7 +129,7 @@ const Login = () => {
                         Not a member?
                         <a> </a>
                         <Link
-                            to="/Signup"
+                            to="/signup"
                             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
                         >
                             Create New Account Now
