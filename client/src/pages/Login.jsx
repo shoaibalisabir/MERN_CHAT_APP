@@ -40,10 +40,11 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(data);
+        // console.log(data);
         try {
-            const url = 'http://localhost:8000/api/login';
+            const url = 'http://localhost:8000/api/userSearch';
             const response = await axios.post(url, data);
+            // console.log(response);
             localStorage.setItem('userdata', JSON.stringify(response));
             window.location = '/dashboard';
             console.log(response.data);

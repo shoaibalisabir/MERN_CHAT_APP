@@ -1,19 +1,99 @@
-import { InputGroup, InputLeftElement, Input, Text, Menu, MenuButton, Button } from "@chakra-ui/react";
+import {
+    InputGroup,
+    InputLeftElement,
+    Input,
+    Text,
+    Menu,
+    MenuButton,
+    Button, Drawer,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
+    DrawerHeader,
+    useToast,
+    Box
+} from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import UserContext from "../context/UserContext";
+import { useDisclosure } from "@chakra-ui/react";
+import axios from "axios";
+import ChatLoading from "./ChatLoading";
+import UserListItem from "./UserListItem";
 
 const Header = () => {
 
-    let { setUser, user } = useContext(UserContext);
+    const { setUser, user } = useContext(UserContext);
+    const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [searchResult, setSearchResult] = useState([])
+    // var userData;
+    var userToken;
 
 
+    // console.log("User: ", user);
+
+    // setTimeout(() => {
+
+    //     userData = JSON.parse(user);
+    //     console.log("userData", userData);
+    //     userToken = userData.data.data;
+    //     console.log("User Token:", userToken);
+    // }, 4000);
+
+    const userInfoLocalStorage = JSON.parse(localStorage.getItem("userdata"));
+    userToken = userInfoLocalStorage.data.data;
+    console.log("userInfoLocalStorage", userToken);
+
+
+    const toast = useToast()
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleLogout = () => {
         setUser(null);
         // console.log("User Data Header:", user);
         localStorage.removeItem('userdata');
         window.location = '/';
+    };
+
+
+    const accessChat = (userId) => { };
+
+    const handleSearchUser = async () => {
+
+        if (!search) {
+            toast({
+                title: 'Error',
+                description: "Please enter a name or email first.",
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+            });
+            return;
+        }
+        try {
+            setLoading(true);
+
+            const config = { headers: { Authorization: `Bearer ${userToken}` } };
+            console.log("config", config);
+
+            const { data } = await axios.get(`http://localhost:8000/api/userSearch?search=${search}`, config);
+
+            console.log("Search data", data);
+            setLoading(false);
+            setSearchResult(data);
+
+        } catch (error) {
+            toast({
+                title: "Error",
+                description: `${error.message}`,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+            });
+
+        }
     };
 
     return (
@@ -23,11 +103,11 @@ const Header = () => {
                     <InputLeftElement pointerEvents='none'>
                         <SearchIcon color='gray.300' />
                     </InputLeftElement>
-                    <Input type='text' placeholder='Search User' />
+                    <Input isReadOnly type='text' placeholder='Search User' onClick={onOpen} />
                 </InputGroup>
             </div>
             <div className='w-1/3 flex justify-center' >
-                <Text fontSize="xl">Honest Chat Conversation</Text>
+                <Text fontSize="xl">Honest Company Conversation</Text>
             </div>
             <div className='w-1/3 flex justify-end'>
                 <Menu>
@@ -36,7 +116,57 @@ const Header = () => {
                     </MenuButton>
                 </Menu>
             </div>
+
+            <Drawer placement="left" onClose={onClose} isOpen={isOpen} >
+                <DrawerOverlay></DrawerOverlay>
+                <DrawerContent >
+                    <DrawerCloseButton></DrawerCloseButton>
+                    <DrawerHeader>Search Users</DrawerHeader>
+                    <InputGroup w="80%" mx="auto">
+                        <InputLeftElement pointerEvents='none'>
+                            <SearchIcon color='gray.300' />
+                        </InputLeftElement>
+                        <Input
+                            type='text'
+                            mr={2}
+                            placeholder='name or email'
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                        <Button onClick={handleSearchUser}
+                        >Go</Button>
+
+                    </InputGroup>
+                    <Box overflowY="auto" maxHeight="-webkit-max-content" css={{
+                        '&::-webkit-scrollbar': {
+                            width: '8px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                            borderRadius: '4px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                            borderRadius: '4px',
+                        },
+                    }}>
+                        {loading ? (<ChatLoading></ChatLoading>) :
+                            (searchResult?.map((user) =>
+                            (<UserListItem
+                                key={user._id}
+                                user={user}
+                                handleFunction={() => accessChat(user._id)}>
+                            </UserListItem>)))}
+                    </Box>
+
+                </DrawerContent>
+            </Drawer>
+
+
         </div>
+
+
+
     );
 };
 
