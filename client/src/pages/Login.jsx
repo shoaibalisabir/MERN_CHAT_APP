@@ -3,12 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from "react";
 import logo from '../assets/images/logo.png';
-import { useContext } from "react";
-import UserContext from "../context/UserContext";
+import { ChatState } from '../context/ChatProvider';
+
 
 
 
 const Login = () => {
+
+    const { setUserToken, setUser } = ChatState();
 
     //check if token and user data  is already stored
     const navigate = useNavigate();
@@ -42,10 +44,14 @@ const Login = () => {
         e.preventDefault();
         // console.log(data);
         try {
-            const url = 'http://localhost:8000/api/userSearch';
+            const url = 'http://localhost:8000/api/login';
             const response = await axios.post(url, data);
             // console.log(response);
             localStorage.setItem('userdata', JSON.stringify(response));
+            // console.log("Login setUser:", response);
+            // console.log("Login setUserToken:", response.data.data);
+            setUser(JSON.stringify(response));
+            setUserToken(response.data.data);
             window.location = '/dashboard';
             console.log(response.data);
         } catch (error) {

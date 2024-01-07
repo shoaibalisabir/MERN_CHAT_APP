@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { Avatar } from "@chakra-ui/avatar";
 import { Box, Text } from "@chakra-ui/layout";
-import UserContext from "../context/UserContext";
 
-const UserListItem = ({ user, handleFunction }) => {
+const UserListItem = ({ userSearched, handleFunction }) => {
 
 
     // const { user } = useContext(UserContext);
+    // console.log("UserListItem", userSearched);
 
     return (
         <Box mr={4} ml={4} mt={4} mx="auto"
@@ -30,13 +30,13 @@ const UserListItem = ({ user, handleFunction }) => {
                 mr={2}
                 size="sm"
                 cursor="pointer"
-                name={user.firstName}
+                name={userSearched.firstName}
             />
             <Box>
-                <Text>{user.firstName}</Text>
+                <Text>{userSearched.firstName}</Text>
                 <Text fontSize="xs">
                     <b>Email : </b>
-                    {user.email}
+                    {userSearched.email}
                 </Text>
             </Box>
         </Box>

@@ -11,11 +11,12 @@ import {
     DrawerCloseButton,
     DrawerHeader,
     useToast,
-    Box
+    Box,
+    Spinner
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
-import { useContext, useState } from "react";
-import UserContext from "../context/UserContext";
+import { useState, useEffect } from "react";
+import { ChatState } from "../context/ChatProvider";
 import { useDisclosure } from "@chakra-ui/react";
 import axios from "axios";
 import ChatLoading from "./ChatLoading";
@@ -23,15 +24,31 @@ import UserListItem from "./UserListItem";
 
 const Header = () => {
 
-    const { setUser, user } = useContext(UserContext);
+    const { setUser, user, setSelectedChat, chats, setChats, setUserToken } = ChatState();
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
-    const [searchResult, setSearchResult] = useState([])
-    // var userData;
+    const [loadingChat, setLoadingChat] = useState(false);
+    const [searchResult, setSearchResult] = useState([]);
+    var userData;
     var userToken;
 
 
-    // console.log("User: ", user);
+    userData = user;
+
+    try {
+        if (userData) {
+            // console.log("User From Context: ", JSON.parse(userData));
+        }
+    } catch (error) {
+        console.log("Error is:", error);
+    }
+
+    useEffect(() => {
+
+        setUserToken(userToken);
+
+    }, [])
+
 
     // setTimeout(() => {
 
@@ -43,10 +60,11 @@ const Header = () => {
 
     const userInfoLocalStorage = JSON.parse(localStorage.getItem("userdata"));
     userToken = userInfoLocalStorage.data.data;
-    console.log("userInfoLocalStorage", userToken);
+    // setUserToken(userToken);
+    // console.log("userInfoLocalStorage", userToken);
 
 
-    const toast = useToast()
+    const toast = useToast();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -57,8 +75,33 @@ const Header = () => {
         window.location = '/';
     };
 
+    const accessChat = async (userId) => {
+        try {
+            setLoadingChat(true);
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${userToken}`
+                }
+            };
 
-    const accessChat = (userId) => { };
+            const { data } = await axios.post("http://localhost:8000/api/chats", { userId }, config);
+
+            if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+
+            setSelectedChat(data);
+            setLoadingChat(false);
+            onClose();
+        } catch (error) {
+            toast({
+                title: "Error getting the chat",
+                description: `${error.message}`,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    };
 
     const handleSearchUser = async () => {
 
@@ -107,6 +150,7 @@ const Header = () => {
                 </InputGroup>
             </div>
             <div className='w-1/3 flex justify-center' >
+
                 <Text fontSize="xl">Honest Company Conversation</Text>
             </div>
             <div className='w-1/3 flex justify-end'>
@@ -151,14 +195,14 @@ const Header = () => {
                         },
                     }}>
                         {loading ? (<ChatLoading></ChatLoading>) :
-                            (searchResult?.map((user) =>
+                            (searchResult?.map((userSearched) =>
                             (<UserListItem
-                                key={user._id}
-                                user={user}
-                                handleFunction={() => accessChat(user._id)}>
+                                key={userSearched._id}
+                                userSearched={userSearched}
+                                handleFunction={() => accessChat(userSearched._id)}>
                             </UserListItem>)))}
                     </Box>
-
+                    {loadingChat && <Spinner ml='auto' d='flex'></Spinner>}
                 </DrawerContent>
             </Drawer>
 
